@@ -1,7 +1,7 @@
 <?php
 
 namespace Database\Factories;
-
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,8 @@ class TaskFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'status' => $status,
-            'due_date' => $this->faker->dateTimeThisMonth()
+            'due_date' => $this->faker->dateTimeThisMonth(),
+            'user_id' => User::factory(),
         ];
     }
 }

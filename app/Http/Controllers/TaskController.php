@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
+use App\Filters\TaskFilter;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filter = new TaskFilter();
+        $queryItems = $filter->transform($request);
+        $tasks = Task::where($queryItems);
+        return new TaskCollection($tasks->paginate()->appends($request->query()));
     }
 
     /**
@@ -29,7 +36,7 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        return new TaskResource(Task::create($request->all()));
     }
 
     /**
@@ -37,7 +44,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return new TaskResource($task);
     }
 
     /**
@@ -53,7 +60,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->all());
     }
 
     /**
@@ -61,6 +68,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $delete = Task::destroy($task->id);
+        return response()->json([
+            'data' => $delete,
+            'message' => 'Task deleted successfully',
+        ]);
     }
 }

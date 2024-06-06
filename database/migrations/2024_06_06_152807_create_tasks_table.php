@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description');
             $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
             $table->datetime('due_date');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }
