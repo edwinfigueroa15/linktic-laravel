@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function () {
+    Route::post('login', UserController::class.'@login');
+    Route::post('signup', UserController::class.'@signup');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::apiResource('task', TaskController::class);
+    });
 });
