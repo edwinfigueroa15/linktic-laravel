@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->namespace('App\Http\Controllers')->group(function () {
-    Route::apiResource('task', TaskController::class);
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function () {
+    Route::post('login', UserController::class.'@login');
+    Route::post('signup', UserController::class.'@signup');
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::apiResource('task', TaskController::class);
+    });
 });
